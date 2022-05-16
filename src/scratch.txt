@@ -1,0 +1,3 @@
+--plus-border: max(var(--products-list-padding) + var(--couple-overlay-px) - var(--gap-between-products), 0px);
+
+var(--gap-between-products) - var(--couple-overlay-px)
