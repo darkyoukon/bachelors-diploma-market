@@ -42,14 +42,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-* {
-  --background-color: rgb(254, 252, 253);
-
-  --border-color: #0D0A0B;
-  --line-color: hsla(225, 36%, 4%, .5);
-}
-
 main {
   flex: 1 0 auto;
 
@@ -58,7 +50,7 @@ main {
   justify-content: center;
   align-items: center;
 
-  margin: 2vh 0;
+  margin: calc(3 * var(--page-bar)) 0;
   row-gap: 2vh;
 }
 .category-list {

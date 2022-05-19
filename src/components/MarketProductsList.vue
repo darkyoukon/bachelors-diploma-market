@@ -5,23 +5,26 @@
         id="prev-page"
         @click="--currentPage"
     />
-    <MarketContent class="inner-content">
+    <MarketContent id="inner-content">
       <div
           id="products-list"
           @wheel.prevent="horizontalProductListScroll($event, Math.min(2, visibleProductsColsQuan))"
+
+          @mouseenter="checkMouseHover(true)"
+          @mouseleave="checkMouseHover(false)"
           @scroll="scrollController"
       >
         <!--      need to add :key for v-for like date of the created post-->
         <!--      also need to add v-if v-else to check if there is no products and draw relevant warning-->
         <MarketProduct v-for="(item) in productsQuantity" :key="item" class="product"></MarketProduct>
       </div>
-      <PageList
-          v-show="getPagesCount > 1"
-          :pages-count="getPagesCount"
-
-          v-model:current-page="currentPage"
-      />
     </MarketContent>
+    <PageList
+        v-show="getPagesCount > 1"
+        :pages-count="getPagesCount"
+
+        v-model:current-page="currentPage"
+    />
     <button
         v-show="getPagesCount > 1"
         id="next-page"
@@ -50,6 +53,8 @@ export default {
       currentPage: 0,
       currentScroll: 0,
       scrollTo: 0,
+
+      active: false
     }
   },
   computed: {
@@ -118,6 +123,9 @@ export default {
             this.currentPage - scrollColsQuan;
       }
     },
+    checkMouseHover(isOn) {
+      this.active = isOn
+    },
     // this method is debounced in created hook to share debounce on each component instance and save this context
     scrollController() {
       if (this.animating) {
@@ -129,8 +137,8 @@ export default {
         return;
       }
 
-      this.currentPage = Math.ceil(
-          Math.floor(this.getProductsList.scrollLeft / this.columnScrollMeasure() * 2) / 2);
+      this.currentPage = this.active ? Math.ceil(
+          Math.floor(this.getProductsList.scrollLeft / this.columnScrollMeasure() * 2) / 2) : this.currentPage;
 
       this.scrollList();
     },
@@ -148,30 +156,18 @@ export default {
   },
   created() {
     this.scrollController = useDebounceFn(this.scrollController, this.debounceAfter);
+    this.checkMouseHover = useDebounceFn(this.checkMouseHover, this.debounceAfter);
   }
 }
 </script>
 
 <style scoped>
-* {
-  --visible-columns: v-bind(visibleProductsColsQuan);
-
-  --product-size: 250px;
-  --product-border-radius: 16px;
-
-  --products-list-padding: 30px;
-  --gap-between-products: 20px;
-  /*not recommended to set this value more than half of actual product size, gap between products or padding*/
-  --border-between-products: 2px;
-
-  /*A couple of some pixels to hide excessive border rounding on bad DPI screens*/
-  --couple-overlay-px: min(3px, var(--gap-between-products));
-}
-
 .products-content {
   display: flex;
   gap: var(--products-list-padding);
   align-items: center;
+
+  position: relative;
 }
 
 .products-content > button {
@@ -203,7 +199,7 @@ button#next-page {
   transition: .3s;
 }
 
-.inner-content {
+#inner-content {
   overflow: hidden;
   border-radius: calc(var(--product-border-radius) + var(--products-list-padding));
 
@@ -214,7 +210,7 @@ button#next-page {
   position: relative;
   z-index: 0;
 }
-.inner-content:before {
+#inner-content:before {
   position: absolute;
   content: '';
   left: var(--plus-border);
@@ -225,7 +221,7 @@ button#next-page {
   background-image: linear-gradient(to right, var(--background-color) 1%, rgba(0, 0, 0, 0) 40%);
   z-index: 1;
 }
-.inner-content:after {
+#inner-content:after {
   position: absolute;
   content: '';
   right: var(--plus-border);
@@ -253,6 +249,8 @@ button#next-page {
   min-height: calc(
       var(--product-size)
   );
+
+  --visible-columns: v-bind(visibleProductsColsQuan);
   max-width: calc(
       var(--product-size) * var(--visible-columns) +
       var(--gap-between-products) * (var(--visible-columns) - 1) * 2 +
@@ -292,7 +290,7 @@ button#next-page {
   content: '';
   height: var(--border-between-products);
   background-color: var(--line-color);
-  border-radius: 100%;
+  border-radius: var(--product-border-radius);
 
   transform: translateY(calc(-1 * var(--gap-between-products) - var(--border-between-products)));
   width: calc(var(--product-size) - var(--product-border-radius) - var(--products-list-padding));
@@ -307,7 +305,7 @@ button#next-page {
   content: '';
   width: var(--border-between-products);
   background-color: var(--line-color);
-  border-radius: 100%;
+  border-radius: var(--product-border-radius);
 
   left: 0;
   transform: translateX(calc(-1 * var(--gap-between-products) - var(--border-between-products)));

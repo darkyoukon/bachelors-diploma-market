@@ -1,0 +1,28 @@
+:root {
+    /******************
+    UX reusable colours
+    ******************/
+    --background-color: rgb(254, 252, 253);
+
+    --border-color: #0D0A0B;
+    --line-color: hsla(225, 36%, 4%, .5);
+
+    /*************
+    UX proportions
+    *************/
+    --products-list-padding: 30px;
+    /*A couple of some pixels to hide excessive border rounding on bad DPI screens*/
+    --couple-overlay-px: min(3px, var(--gap-between-products));
+
+    --product-size: max(170px, 23vh);
+    --product-border-radius: 16px;
+    --gap-between-products: 20px;
+    /*not recommended to set this value more than half of actual product size, gap between products or padding*/
+    --border-between-products: 2px;
+
+    /*Size of page button, can't be more than products-list-padding*/
+    --page-bar: 16px;
+    --page-bar-flex-gap: 8px;
+
+    --page-bar-transition-time: .4s;
+}

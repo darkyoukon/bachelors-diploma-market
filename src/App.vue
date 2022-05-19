@@ -1,7 +1,7 @@
 <template>
-  <market-header />
-  <market-main />
-  <market-footer />
+  <MarketHeader />
+  <MarketMain />
+  <MarketFooter />
 </template>
 
 <script>
@@ -30,26 +30,29 @@ export default {
 </script>
 
 <style>
-:where(*, *:where(:before, :after)) {
+@import '~@/assets/styles/variables.css';
+
+*, :before, :after {
   margin: 0;
   padding: 0;
   border: 0;
   box-sizing: border-box;
 }
-:where(button) {
-  cursor: pointer;
-  display: block;
-}
-html, body {
+html {
   height: 100%;
   /*DON'T FORGET NOT TO CHANGE FONT SIZE REM*/
 }
 body {
+  height: inherit;
   background: url("~@/assets/body-background.jpg") center/80vh;
 }
 :where(a) {
   text-decoration: none;
   color: #001514;
+}
+:where(button) {
+  cursor: pointer;
+  display: block;
 }
 :where(img) {
   display: block;

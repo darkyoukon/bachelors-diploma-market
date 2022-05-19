@@ -1,6 +1,6 @@
 {
   "name": "bachelors-diploma-market",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,7 +12,7 @@
     "core-js": "^3.8.3",
     "debounce": "^1.2.1",
     "lodash": "^4.17.21",
-    "vue": "^3.2.13",
+    "vue": "^3.2.33",
     "vue-debounce": "^3.1.0"
   },
   "devDependencies": {
@@ -23,7 +23,7 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "node-sass": "^7.0.1",
+    "sass": "^1.51.0",
     "sass-loader": "^12.6.0"
   },
   "eslintConfig": {
