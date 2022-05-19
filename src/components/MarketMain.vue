@@ -50,7 +50,7 @@ main {
   justify-content: center;
   align-items: center;
 
-  margin: calc(3 * var(--page-bar)) 0;
+  margin: calc(var(--page-bar)) 0 calc(2.5 * var(--page-bar));
   row-gap: 2vh;
 }
 .category-list {

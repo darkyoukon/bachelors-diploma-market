@@ -8,10 +8,18 @@
     <MarketContent id="inner-content">
       <div
           id="products-list"
-          @wheel.prevent="horizontalProductListScroll($event, Math.min(2, visibleProductsColsQuan))"
 
-          @mouseenter="checkMouseHover(true)"
-          @mouseleave="checkMouseHover(false)"
+          @wheel.prevent="speed = 1000; horizontalProductListScroll($event, Math.min(2, visibleProductsColsQuan))"
+
+          @mouseenter="activeHover = true"
+          @mouseleave="activeHover = false"
+
+          @mousedown="(evt) => {if(evt.button === 1) this.activeScroll = true}"
+          @mouseup="(evt) => {if(evt.button === 1) this.activeScroll = false}"
+
+          @touchstart="activeScroll = true; activeHover = true; speed=100"
+          @touchend="activeScroll = false; activeHover = true"
+
           @scroll="scrollController"
       >
         <!--      need to add :key for v-for like date of the created post-->
@@ -34,9 +42,8 @@
 </template>
 
 <script>
-import {useDebounceFn} from '@vueuse/core'
 import {useAnimation} from "@/hooks/useAnimation";
-
+import {useDebounceFn} from "@vueuse/core"
 import MarketProduct from "@/components/MarketProduct";
 
 export default {
@@ -54,7 +61,8 @@ export default {
       currentScroll: 0,
       scrollTo: 0,
 
-      active: false
+      activeHover: false,
+      activeScroll: false
     }
   },
   computed: {
@@ -123,12 +131,9 @@ export default {
             this.currentPage - scrollColsQuan;
       }
     },
-    checkMouseHover(isOn) {
-      this.active = isOn
-    },
     // this method is debounced in created hook to share debounce on each component instance and save this context
     scrollController() {
-      if (this.animating) {
+      if (this.animating || this.activeScroll) {
         return;
       }
 
@@ -137,7 +142,7 @@ export default {
         return;
       }
 
-      this.currentPage = this.active ? Math.ceil(
+      this.currentPage = this.activeHover ? Math.ceil(
           Math.floor(this.getProductsList.scrollLeft / this.columnScrollMeasure() * 2) / 2) : this.currentPage;
 
       this.scrollList();
@@ -156,7 +161,6 @@ export default {
   },
   created() {
     this.scrollController = useDebounceFn(this.scrollController, this.debounceAfter);
-    this.checkMouseHover = useDebounceFn(this.checkMouseHover, this.debounceAfter);
   }
 }
 </script>

@@ -14,7 +14,7 @@
     /*A couple of some pixels to hide excessive border rounding on bad DPI screens*/
     --couple-overlay-px: min(3px, var(--gap-between-products));
 
-    --product-size: max(170px, 23vh);
+    --product-size: min(250px, 26vh);
     --product-border-radius: 16px;
     --gap-between-products: 20px;
     /*not recommended to set this value more than half of actual product size, gap between products or padding*/
