@@ -2,13 +2,13 @@
   <div class="currency">
     <button class="chosen-currency" @click="show = !show">
       <img src="@/assets/icons/currencies/uah.svg" class="icon" alt="UAH"/>
-      <i class="down_arrow icon"/>
+      <i class="icon down_arrow" :class="{reverted: show}"/>
     </button>
 
     <transition name="dropdown-fade" appear>
-      <MarketContent class="dropdown" v-show="show" @click="show = !show">
+      <MarketContent class="dropdown" v-show="show">
         <div class="option" v-for="option in options" :key="option.id">
-          <button>
+          <button @click="show = !show">
             <img
                 class="icon"
                 v-if="option.img"
@@ -57,6 +57,7 @@ export default {
   display: flex;
   position: relative;
   border-radius: 20%;
+  padding: 10px;
 }
 
 .icon {
@@ -66,6 +67,10 @@ export default {
 
 .down_arrow {
   background: url('~@/assets/icons/down_arrow.png') center/100% no-repeat;
+  transition: .4s;
+  &.reverted {
+    transform: rotate(-180deg);
+  }
 }
 
 .dropdown {
@@ -74,14 +79,11 @@ export default {
 
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   row-gap: var(--gap-between-products);
 
-  width: 100%;
   padding: calc(var(--gap-between-products) / 2);
   border-radius: var(--product-border-radius);
-
-  transition: 4s;
 }
 
 .dropdown-fade-enter-active,
@@ -96,30 +98,30 @@ export default {
 }
 
 .option {
-  width: inherit;
-  position: relative;
-}
-
-.option > button {
   display: flex;
-  align-items: center;
   justify-content: center;
-  column-gap: var(--gap-between-products);
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: var(--gap-between-products);
 
-  padding: 4px;
-  border-radius: 100%;
-}
+    padding: 4px;
+    border-radius: 100%;
+  }
 
-.option:not(:first-child):before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: calc(-1 * var(--gap-between-products) / 2);
+  position: relative;
+  &:not(:first-child):before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc(-1 * var(--gap-between-products) / 2);
 
-  height: 2px;
-  width: 100%;
-  background-color: var(--line-color);
-  border-radius: var(--product-border-radius);
+    height: 2px;
+    width: 100%;
+    background-color: var(--line-color);
+    border-radius: var(--product-border-radius);
+  }
 }
 
 .dropdown-option_img {
@@ -129,17 +131,16 @@ export default {
 .dropdown-option_description {
   font-size: 22px;
   position: relative;
-}
+  &:before {
+    content: '';
+    position: absolute;
+    height: 50%;
+    width: 2px;
 
-.dropdown-option_description:before {
-  content: '';
-  position: absolute;
-  height: 50%;
-  width: 2px;
-
-  top: 0; bottom: 0; margin: auto 0;
-  left: calc(var(--products-list-padding) / -2);
-  background-color: var(--line-color);
-  border-radius: var(--product-border-radius);
+    top: 0; bottom: 0; margin: auto 0;
+    left: calc(var(--products-list-padding) / -2);
+    background-color: var(--line-color);
+    border-radius: var(--product-border-radius);
+  }
 }
 </style>
