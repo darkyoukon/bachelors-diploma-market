@@ -37,7 +37,7 @@ export default {
     }
   },
   data() {
-    let defaultPagesCount = 9;
+    let defaultPagesCount = 10;
 
     return {
       visiblePagesCount: defaultPagesCount,
@@ -131,7 +131,7 @@ export default {
   },
   methods: {
     absoluteOffsetSaver(el) {
-      if(this.getPagesOffsets[el.dataset.index]) {
+      if(this.getPagesOffsets[el.dataset.index] != null) {
         el.style.left = `${this.getPagesOffsets[el.dataset.index]}px`;
       } else {
         el.style.right = '0px';

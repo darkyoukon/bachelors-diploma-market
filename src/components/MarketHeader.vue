@@ -8,10 +8,15 @@
     </nav>
     <p class="logo">1000_elephants</p>
     <section class="buttons">
-      <a href="" class="currency">
-        <img src="@/assets/icons/hryvnia.png" class="icon" alt="UAH"/>
-        <div class="down_arrow icon" />
-      </a>
+      <div class="currency">
+        <img src="@/assets/icons/currencies/uah.svg" class="icon" alt="UAH"/>
+        <button class="down_arrow icon" />
+
+        <MarketDropdown>
+          <div src="@/assets/icons/currencies/usd.svg" class="icon" alt="USD"/>
+          <div src="@/assets/icons/currencies/eur.svg" class="icon" alt="EUR"/>
+        </MarketDropdown>
+      </div>
       <a href="" class="search">
 <!--        input type search-->
         <img src="@/assets/icons/search.svg" alt="search" class="icon"/>
@@ -33,12 +38,9 @@ export default {
 
 <style scoped>
 header {
-  /*icons in header*/
-  --icons-size: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 46px;
   width: 100%;
   padding: 1vh 1.5vw;
 
@@ -50,7 +52,6 @@ header {
   border-bottom-right-radius: 10px;
 
   font-size: 22px;
-
 }
 
 header:hover {
@@ -91,6 +92,7 @@ header:hover {
 }
 .currency {
   display: flex;
+  position: relative;
 }
 .down_arrow {
   background: url('~@/assets/icons/down_arrow.png') center/100% no-repeat;
@@ -118,7 +120,7 @@ header:hover {
   display: none;
 }
 .icon {
-  width: 26px;
-  height: auto;
+  width: var(--icon-size);
+  aspect-ratio: 1/1;
 }
 </style>

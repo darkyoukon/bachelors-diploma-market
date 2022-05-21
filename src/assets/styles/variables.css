@@ -10,6 +10,8 @@
     /*************
     UX proportions
     *************/
+    --icon-size: 26px;
+
     --products-list-padding: 30px;
     /*A couple of some pixels to hide excessive border rounding on bad DPI screens*/
     --couple-overlay-px: min(3px, var(--gap-between-products));
