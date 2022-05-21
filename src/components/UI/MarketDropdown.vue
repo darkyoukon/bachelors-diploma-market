@@ -1,50 +1,144 @@
 <template>
-  <MarketContent class="dropdown" v-show="show">
-    <slot>Пусто</slot>
-  </MarketContent>
+  <div class="currency">
+    <button class="chosen-currency" @click="show = !show">
+      <img src="@/assets/icons/currencies/uah.svg" class="icon" alt="UAH"/>
+      <i class="down_arrow icon"/>
+    </button>
+
+    <transition name="dropdown-fade" appear>
+      <MarketContent class="dropdown" v-show="show" @click="show = !show">
+        <div class="option" v-for="option in options" :key="option.id">
+          <button>
+            <img
+                class="icon"
+                v-if="option.img"
+                :src="require('@/assets/icons/currencies/' + option.img)"
+                :alt="option.img.replace(/\.[^/.]+$/, '')"
+            />
+            <span class="dropdown-option_description"
+                  v-if="option.description">
+          {{ option.description }}
+        </span>
+          </button>
+        </div>
+      </MarketContent>
+    </transition>
+  </div>
 </template>
 
 <script>
-import {defineComponent} from "vue";
-
-export default defineComponent({
+export default {
   name: "MarketDropdown",
   props: {
-    show: {
-      type: Boolean,
-      default: true
-    },
-    content: {
-      type: Object,
-      default() {
-        return {img: 'none.png', description: 'Пусто'}
-      }
+    options: {
+      type: Array,
+      // should add typescript for custom class type and constructor concatenating with assets path
+      default: () => [{id: 0, img: 'usd.svg', description: ''}, {id: 1, img: 'eur.svg', description: ''}]
     }
   },
+  data() {
+    return {
+      show: false
+    }
+  },
+  methods: {},
   mounted() {
-    console.log(this.show);
+    // console.log(require('@/assets/icons/currencies/' + 'svv'));
   }
-})
+}
 </script>
 
 <style scoped lang="scss">
+.currency {
+  position: relative;
+}
+
+.chosen-currency {
+  display: flex;
+  position: relative;
+  border-radius: 20%;
+}
+
+.icon {
+  width: var(--icon-size);
+  aspect-ratio: 1/1;
+}
+
+.down_arrow {
+  background: url('~@/assets/icons/down_arrow.png') center/100% no-repeat;
+}
+
 .dropdown {
   position: absolute;
-  bottom: -300%;
+  top: calc(100% + var(--header-padding) * 3);
 
-  width: inherit;
   display: flex;
   flex-direction: column;
   align-items: center;
-  left: 0;
-  right: 0;
-  margin: auto;
+  row-gap: var(--gap-between-products);
+
+  width: 100%;
+  padding: calc(var(--gap-between-products) / 2);
+  border-radius: var(--product-border-radius);
+
+  transition: 4s;
 }
 
-.dropdown :nth-child(n+1):before {
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.option {
+  width: inherit;
+  position: relative;
+}
+
+.option > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: var(--gap-between-products);
+
+  padding: 4px;
+  border-radius: 100%;
+}
+
+.option:not(:first-child):before {
   content: '';
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--gap-between-products) / 2);
+
   height: 2px;
-  width: var(--border-between-products);
+  width: 100%;
+  background-color: var(--line-color);
+  border-radius: var(--product-border-radius);
+}
+
+.dropdown-option_img {
+
+}
+
+.dropdown-option_description {
+  font-size: 22px;
+  position: relative;
+}
+
+.dropdown-option_description:before {
+  content: '';
+  position: absolute;
+  height: 50%;
+  width: 2px;
+
+  top: 0; bottom: 0; margin: auto 0;
+  left: calc(var(--products-list-padding) / -2);
   background-color: var(--line-color);
   border-radius: var(--product-border-radius);
 }

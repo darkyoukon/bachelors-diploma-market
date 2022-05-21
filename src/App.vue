@@ -53,11 +53,14 @@ body {
 :where(button) {
   cursor: pointer;
   display: block;
+  background: none;
 }
 :where(img) {
   display: block;
   max-width: 100%;
   max-height: 100%;
+
+  font-size: 16px;
 }
 #app {
   background: radial-gradient(rgba(255,255,255,0.2) 40%, rgba(255,255,255,0.7) 70%);

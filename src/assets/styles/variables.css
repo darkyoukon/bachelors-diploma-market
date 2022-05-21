@@ -10,6 +10,9 @@
     /*************
     UX proportions
     *************/
+    --header-padding: 1vh;
+
+
     --icon-size: 26px;
 
     --products-list-padding: 30px;
