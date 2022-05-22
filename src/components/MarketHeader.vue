@@ -8,7 +8,11 @@
     </nav>
     <p class="logo">1000_elephants</p>
     <section class="buttons">
-      <MarketDropdown />
+      <MarketDropdown
+          v-model:currentOption="currency.currentCurrency"
+          :otherOptions="currency.alternativeCurrencies"
+          :imgPath="currency.assetsPath"
+      />
       <a href="" class="search">
         <!--        input type search-->
         <img src="@/assets/icons/search.svg" alt="search" class="icon"/>
@@ -23,8 +27,15 @@
 </template>
 
 <script>
+import { useCurrencyStore } from '@/stores/useCurrencyStore'
 export default {
   name: "MarketHeader",
+  setup() {
+    const currency = useCurrencyStore();
+    return {
+      currency
+    }
+  }
 }
 </script>
 

@@ -5,6 +5,8 @@
         id="prev-page"
         @click="--currentPage"
     />
+
+<!--    should use suspense component here-->
     <MarketContent id="inner-content">
       <div
           id="products-list"

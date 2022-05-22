@@ -15,6 +15,12 @@
       </a>
     </section>
     <img src="@/assets/icons/instagram-logo.png" alt="1001_elephants logo" class="icon-logo">
+
+<!--    <MarketDropdown-->
+<!--        v-model:currentOption=""-->
+<!--        :otherOptions=""-->
+<!--        :imgPath="currency.assetsPath"-->
+<!--    />-->
     <section class="additional-funcs">
       <a href="" class="translator">
         <img src="@/assets/icons/translate.png" alt="translation" class="icon-link">
@@ -26,8 +32,16 @@
 </template>
 
 <script>
+import {useLanguageStore} from "@/stores/useLanguageStore";
+
 export default {
-  name: "MarketFooter"
+  name: "MarketFooter",
+  setup() {
+    const language = useLanguageStore();
+    return {
+      language
+    }
+  }
 }
 </script>
 

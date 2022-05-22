@@ -1,24 +1,27 @@
 <template>
   <div class="currency">
     <button class="chosen-currency" @click="show = !show">
-      <img src="@/assets/icons/currencies/uah.svg" class="icon" alt="UAH"/>
+      <img class="icon"
+           :src="require(`@/assets/icons/${imgPath + currentOption}.svg`)"
+           :alt="currentOption"/>
       <i class="icon down_arrow" :class="{reverted: show}"/>
     </button>
 
     <transition name="dropdown-fade" appear>
       <MarketContent class="dropdown" v-show="show">
-        <div class="option" v-for="option in options" :key="option.id">
-          <button @click="show = !show">
+        <div class="option" v-for="option in otherOptions" :key="option">
+          <button @click="show = !show; this.$emit('update:currentOption', option);">
             <img
                 class="icon"
-                v-if="option.img"
-                :src="require('@/assets/icons/currencies/' + option.img)"
-                :alt="option.img.replace(/\.[^/.]+$/, '')"
+                v-if="option"
+                :src="require(`@/assets/icons/${imgPath + option}.svg`)"
+                :alt="option"
             />
+            <VerticalLine v-if="option.img && option.description"/>
             <span class="dropdown-option_description"
                   v-if="option.description">
-          {{ option.description }}
-        </span>
+              {{ option.description }}
+            </span>
           </button>
         </div>
       </MarketContent>
@@ -30,11 +33,23 @@
 export default {
   name: "MarketDropdown",
   props: {
-    options: {
+    currentOption: {
+      type: String,
+      required: true
+    },
+    otherOptions: {
       type: Array,
-      // should add typescript for custom class type and constructor concatenating with assets path
-      default: () => [{id: 0, img: 'usd.svg', description: ''}, {id: 1, img: 'eur.svg', description: ''}]
+      required: true
+    },
+    imgPath: {
+      type: String,
+      default: ''
     }
+    // options: {
+    //   type: Array,
+    //   // should add typescript for custom class type and constructor concatenating with assets path
+    //   default: () => [{id: 0, img: 'usd.svg', description: ''}, {id: 1, img: 'eur.svg', description: ''}]
+    // }
   },
   data() {
     return {
@@ -43,6 +58,7 @@ export default {
   },
   methods: {},
   mounted() {
+    console.log()
     // console.log(require('@/assets/icons/currencies/' + 'svv'));
   }
 }
@@ -55,7 +71,6 @@ export default {
 
 .chosen-currency {
   display: flex;
-  position: relative;
   border-radius: 20%;
   padding: 10px;
 }
@@ -68,6 +83,7 @@ export default {
 .down_arrow {
   background: url('~@/assets/icons/down_arrow.png') center/100% no-repeat;
   transition: .4s;
+
   &.reverted {
     transform: rotate(-180deg);
   }
@@ -76,10 +92,13 @@ export default {
 .dropdown {
   position: absolute;
   top: calc(100% + var(--header-padding) * 3);
+  width: fit-content;
+  left: 0; right: 0;
+  margin: 0 auto;
 
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   row-gap: var(--gap-between-products);
 
   padding: calc(var(--gap-between-products) / 2);
@@ -100,6 +119,7 @@ export default {
 .option {
   display: flex;
   justify-content: center;
+
   button {
     display: flex;
     align-items: center;
@@ -124,23 +144,7 @@ export default {
   }
 }
 
-.dropdown-option_img {
-
-}
-
 .dropdown-option_description {
   font-size: 22px;
-  position: relative;
-  &:before {
-    content: '';
-    position: absolute;
-    height: 50%;
-    width: 2px;
-
-    top: 0; bottom: 0; margin: auto 0;
-    left: calc(var(--products-list-padding) / -2);
-    background-color: var(--line-color);
-    border-radius: var(--product-border-radius);
-  }
 }
 </style>
