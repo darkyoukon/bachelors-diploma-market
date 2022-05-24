@@ -3,9 +3,9 @@ import {defineStore} from 'pinia'
 // add ts type checking
 export const useLanguageStore = defineStore('language', {
     state: () => ({
-        assetsPath: 'currencies/',
+        assetPath: 'translate.png',
         currentLanguage: 'Українська',
-        availableCurrencies: ['English', 'Polski']
+        availableCurrencies: ['English', 'Polski', 'Українська']
     }),
     getters: {
         alternativeLanguages: (state) => state.availableCurrencies.filter(lan => lan !== state.currentLanguage)

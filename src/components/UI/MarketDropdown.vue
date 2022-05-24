@@ -1,26 +1,30 @@
 <template>
   <div class="currency">
-    <button class="chosen-currency" @click="show = !show">
+    <button class="chosen-option" @click="show = !show">
       <img class="icon"
-           :src="require(`@/assets/icons/${imgPath + currentOption}.svg`)"
-           :alt="currentOption"/>
+           :src="id === 'currency' ?
+           require(`@/assets/icons/${imgPath + currentOption}.svg`) :
+           require(`@/assets/icons/${imgPath}`)"
+
+           :alt="id === 'currency' ? currentOption : imgPath"/>
+      <span v-if="id === 'language'" class="chosen-description">{{currentOption}}</span>
       <i class="icon down_arrow" :class="{reverted: show}"/>
     </button>
 
     <transition name="dropdown-fade" appear>
-      <MarketContent class="dropdown" v-show="show">
+      <MarketContent class="dropdown" v-show="show" :data-position="bottom">
         <div class="option" v-for="option in otherOptions" :key="option">
           <button @click="show = !show; this.$emit('update:currentOption', option);">
             <img
                 class="icon"
-                v-if="option"
+                v-if="id !== 'language'"
                 :src="require(`@/assets/icons/${imgPath + option}.svg`)"
                 :alt="option"
             />
-            <VerticalLine v-if="option.img && option.description"/>
+            <VerticalLine v-if="id !== 'language' && id !== 'currency'"/>
             <span class="dropdown-option_description"
-                  v-if="option.description">
-              {{ option.description }}
+                  v-if="id === 'language'">
+              {{ option }}
             </span>
           </button>
         </div>
@@ -33,6 +37,14 @@
 export default {
   name: "MarketDropdown",
   props: {
+    bottom: {
+      type: Boolean,
+      default: false
+    },
+    id: {
+      type: String,
+      required: true
+    },
     currentOption: {
       type: String,
       required: true
@@ -58,8 +70,7 @@ export default {
   },
   methods: {},
   mounted() {
-    console.log()
-    // console.log(require('@/assets/icons/currencies/' + 'svv'));
+
   }
 }
 </script>
@@ -69,10 +80,14 @@ export default {
   position: relative;
 }
 
-.chosen-currency {
+.chosen-option {
   display: flex;
   border-radius: 20%;
   padding: 10px;
+}
+.chosen-description {
+  margin: auto 10px;
+  font-size: 22px;
 }
 
 .icon {
@@ -91,7 +106,6 @@ export default {
 
 .dropdown {
   position: absolute;
-  top: calc(100% + var(--header-padding) * 3);
   width: fit-content;
   left: 0; right: 0;
   margin: 0 auto;
@@ -104,6 +118,12 @@ export default {
   padding: calc(var(--gap-between-products) / 2);
   border-radius: var(--product-border-radius);
 }
+.dropdown[data-position=false] {
+  top: calc(100% + var(--header-padding) * 3);
+}
+.dropdown[data-position=true] {
+  bottom: calc(100% + var(--header-padding) * 3);
+}
 
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
@@ -113,7 +133,7 @@ export default {
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {
   opacity: 0;
-  transform: translateX(50px);
+  transform: translateX(20px);
 }
 
 .option {

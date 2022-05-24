@@ -12,6 +12,7 @@
           v-model:currentOption="currency.currentCurrency"
           :otherOptions="currency.alternativeCurrencies"
           :imgPath="currency.assetsPath"
+          :id="currency.$id"
       />
       <a href="" class="search">
         <!--        input type search-->

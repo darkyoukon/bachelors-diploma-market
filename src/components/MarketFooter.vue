@@ -16,17 +16,14 @@
     </section>
     <img src="@/assets/icons/instagram-logo.png" alt="1001_elephants logo" class="icon-logo">
 
-<!--    <MarketDropdown-->
-<!--        v-model:currentOption=""-->
-<!--        :otherOptions=""-->
-<!--        :imgPath="currency.assetsPath"-->
-<!--    />-->
     <section class="additional-funcs">
-      <a href="" class="translator">
-        <img src="@/assets/icons/translate.png" alt="translation" class="icon-link">
-        <div>Українська</div>
-        <div class="up_arrow icon-link" />
-      </a>
+      <MarketDropdown
+          v-model:currentOption="language.currentLanguage"
+          :otherOptions="language.alternativeLanguages"
+          :imgPath="language.assetPath"
+          :id="language.$id"
+          bottom
+      />
     </section>
   </footer>
 </template>
@@ -90,14 +87,5 @@ footer:hover {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-}
-.translator {
-  /*flex: 1;*/
-  display: flex;
-  align-items: center;
-}
-.up_arrow {
-  background: url('~@/assets/icons/down_arrow.png') no-repeat center/100%;
-  transform: rotate(180deg);
 }
 </style>

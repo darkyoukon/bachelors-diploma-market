@@ -154,7 +154,7 @@ export default {
     },
 
     dropdownPageListChecker() {
-      if (parseInt(getComputedStyle(document.getElementById('inner-content')).paddingBottom) <
+      if (parseInt(getComputedStyle(document.getElementById('products-list')).paddingBottom) <
           parseInt(getComputedStyle(document.getElementsByClassName('page')[0]).height) * 1.5) {
         document.getElementById('custom-scroll-bar').classList.add('drop-down');
       }

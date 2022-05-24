@@ -6,7 +6,6 @@
         @click="--currentPage"
     />
 
-<!--    should use suspense component here-->
     <MarketContent id="inner-content">
       <div
           id="products-list"
@@ -206,12 +205,11 @@ button#next-page {
 }
 
 #inner-content {
-  overflow: hidden;
   border-radius: calc(var(--product-border-radius) + var(--products-list-padding));
 
   --plus-border: max(var(--products-list-padding) + var(--couple-overlay-px) - var(--gap-between-products), 0px);
 
-  padding: var(--products-list-padding) var(--plus-border);
+  padding: 0 var(--plus-border);
 
   position: relative;
   z-index: 0;
@@ -240,7 +238,7 @@ button#next-page {
 }
 #products-list {
   /*scroll-behavior: smooth;*/
-  padding: 0 min(var(--gap-between-products) - var(--couple-overlay-px), var(--products-list-padding));
+  padding: var(--products-list-padding) min(var(--gap-between-products) - var(--couple-overlay-px), var(--products-list-padding));
 
   overflow: auto;
   /*white-space: nowrap;*/
@@ -282,8 +280,6 @@ button#next-page {
 #products-list > .product {
   width: var(--product-size);
   aspect-ratio: 1/1;
-
-  border-radius: var(--product-border-radius);
 
   position: relative;
 }
