@@ -1,4 +1,5 @@
 <template>
+<!--  manually created components through Vue Options API-->
   <MarketHeader />
   <MarketMain />
   <MarketFooter />

@@ -45,36 +45,47 @@ export default {
     }
   },
   watch: {
+
+    // method that listens current page to change page bar accordingly
     currentPage: {
       handler() {
         if (this.currentPage < 0 || this.currentPage > this.pagesCount - 1) {
           return;
         }
 
+        // remove first elements and add last according to current visible pages last elements
         if (this.currentPage >= this.visiblePages[this.visiblePages.length - 1]) {
           for (let iter = this.visiblePages[this.visiblePages.length - 1] + 1;
                iter <= Math.min(this.currentPage + 1, this.pagesCount - 1); ++iter) {
             this.visiblePages.shift();
             this.visiblePages.push(iter);
           }
-        } else if (this.currentPage <= this.visiblePages[0]) {
+        }
+        // add first visible indices and remove last ones
+        else if (this.currentPage <= this.visiblePages[0]) {
           for (let iter = this.visiblePages[0] - 1; iter >= Math.max(this.currentPage - 1, 0); --iter) {
             this.visiblePages.unshift(iter);
             this.visiblePages.pop();
           }
         }
       },
+      // required parameter to listen with props
       immediate: true
     },
+
+    // similar listener to change visible pages list according to pages count
     pagesCount: {
       handler() {
+        // case when last element of visible pages array is more that actual pages count (
         if (this.pagesCount <= this.visiblePages[this.visiblePages.length - 1]) {
           for (let iter = this.pagesCount; iter <= this.visiblePages[this.visiblePages.length - 1]; ++iter) {
             this.visiblePages.unshift(this.visiblePages[0] - 1);
             this.visiblePages.pop();
           }
         }
+        // case when pages count variable is less than initial pages bar list
         if (this.pagesCount < this.visiblePages.length) {
+          // remove certain number of elements after actual pages count
           this.visiblePages.splice(this.pagesCount, this.visiblePages.length - this.pagesCount);
         } else if (this.pagesCount > this.visiblePages.length) {
           this.visiblePages.push(
@@ -88,8 +99,10 @@ export default {
         }
         this.visiblePagesCount = this.visiblePages.length;
       },
+      // required parameter to listen with props
       immediate: true
     },
+    // watcher to combine visiblePages with visiblePagesCount fields (that currently was needed for testing purposes)
     visiblePagesCount(newValue, oldValue) {
       if (newValue > this.pagesCount) {
         newValue = this.pagesCount;
@@ -98,12 +111,14 @@ export default {
         return;
       }
 
+      // remove first element in case current page index is the last element of visiblePages
       if (this.currentPage === this.visiblePages[this.visiblePages.length - 1]) {
         this.visiblePages.shift();
       } else if (this.currentPage >= this.visiblePages[newValue - 1]) {
         this.$emit('update:currentPage', this.visiblePages[newValue - 2]);
       }
 
+      // actual combining of two fields
       if (this.visiblePages.length < newValue) {
         Array.from(
             {length: newValue - this.visiblePages.length},
@@ -120,6 +135,7 @@ export default {
     },
   },
   computed: {
+    // computed method that calcs pages offsets after visiblePagesCount change to draw FLIP animation correctly
     getPagesOffsets() {
       let scrollBar = document.getElementById('custom-scroll-bar');
 
@@ -130,6 +146,8 @@ export default {
     }
   },
   methods: {
+    // 3 methods below are needed for TransitionGroup to draw FLIP animation with correct absolute positioning
+    // this method saves position of each leaving page bar
     absoluteOffsetSaver(el) {
       if(this.getPagesOffsets[el.dataset.index] != null) {
         el.style.left = `${this.getPagesOffsets[el.dataset.index]}px`;
@@ -138,21 +156,26 @@ export default {
       }
     },
 
+    // remove class from element so that cascading style won't interrupt flip animation
     customClassesTransitionsSaver(el) {
       if (el.classList.contains('selected')) {
         el.classList.remove('selected')
       }
     },
+
+    // apply class after animation
     customClassesTransitionsApplier(el) {
       if (this.visiblePages[el.dataset.index] === this.currentPage) {
         el.classList.add('selected')
       }
     },
 
+    // v-model binging
     updateCurrentPage(item) {
       this.$emit('update:currentPage', item);
     },
 
+    // determine if there's enough space for pagination
     dropdownPageListChecker() {
       if (parseInt(getComputedStyle(document.getElementById('products-list')).paddingBottom) <
           parseInt(getComputedStyle(document.getElementsByClassName('page')[0]).height) * 1.5) {

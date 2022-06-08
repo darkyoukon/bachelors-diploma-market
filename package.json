@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^8.4.2",
+    "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "debounce": "^1.2.1",
     "lodash": "^4.17.21",
@@ -16,7 +17,7 @@
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
     "vue": "^3.2.33",
-    "vue-debounce": "^3.1.0"
+    "vue-debounce": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

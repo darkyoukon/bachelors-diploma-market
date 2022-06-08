@@ -25,7 +25,17 @@
       >
         <!--      need to add :key for v-for like date of the created post-->
         <!--      also need to add v-if v-else to check if there is no products and draw relevant warning-->
-        <MarketProduct v-for="(item) in productsQuantity" :key="item" class="product"></MarketProduct>
+        <MarketSuspense v-for="item in productsQuantity"
+                        :key="item"
+        >
+          <MarketProduct
+              class="product"
+
+              :productName="productsStore.products[Math.floor(Math.random() * productsStore.products.length)].name"
+              :productPath="productsStore.products[Math.floor(Math.random() * productsStore.products.length)].path"
+              :productPrice="productsStore.products[Math.floor(Math.random() * productsStore.products.length)].price"
+          />
+        </MarketSuspense>
       </div>
     </MarketContent>
     <PageList
@@ -46,13 +56,14 @@
 import {useAnimation} from "@/hooks/useAnimation";
 import {useDebounceFn} from "@vueuse/core"
 import MarketProduct from "@/components/MarketProduct";
+import {useProductsStore} from "@/stores/useProductsStore";
 
 export default {
   name: "ProductList",
   components: {MarketProduct},
   data() {
     return {
-      productsQuantity: 45,
+      productsQuantity: 40,
       visibleProductsColsQuan: 3,
 
       speed: 1000,
@@ -70,11 +81,14 @@ export default {
     getProductsList() {
       return document.getElementById('products-list');
     },
+
+    // computed method that returns new value only when products quantity or visible columns quantity changed
     getPagesCount() {
       return Math.max(Math.ceil(this.productsQuantity / 2) - (this.visibleProductsColsQuan - 1), 1);
     }
   },
   watch: {
+    // watcher that changes interface according to current page with animation
     currentPage() {
       if (this.getPagesCount <= 1) {
         return;
@@ -84,6 +98,8 @@ export default {
 
       this.scrollList();
     },
+
+    // changing current page automatically in case products are removing from grid
     productsQuantity() {
       if(this.getPagesCount <= this.currentPage) {
         this.currentPage = this.getPagesCount - 1;
@@ -91,6 +107,7 @@ export default {
     }
   },
   methods: {
+    // main function that moves products grid according to current page with animation
     scrollList() {
       // current position of product list layout
       this.currentScroll = this.getProductsList.scrollLeft;
@@ -113,6 +130,7 @@ export default {
       });
     },
 
+    // method that moves products grid when user scrolls list with mouse
     // must be called with {passive: false} argument in eventListener (to remove warning), well, v-on is modern thing
     horizontalProductListScroll(evt, scrollColsQuan) {
       if (evt.deltaY > 0 && this.currentPage >= this.getPagesCount - 1 || evt.deltaY < 0 && this.currentPage <= 0) {
@@ -132,32 +150,43 @@ export default {
             this.currentPage - scrollColsQuan;
       }
     },
+
+    // method that is being activated with user's drag or zoom
     // this method is debounced in created hook to share debounce on each component instance and save this context
     scrollController() {
       if (this.animating || this.activeScroll) {
         return;
       }
 
+      // determine if grid is in adequate bounds
       const boundChecker = this.getProductsList.scrollLeft % this.columnScrollMeasure() / this.columnScrollMeasure();
       if (boundChecker < 2e-2 || boundChecker > 99e-2) {
         return;
       }
 
+      // determine closest product list column to animate list naturally
       this.currentPage = this.activeHover ? Math.ceil(
           Math.floor(this.getProductsList.scrollLeft / this.columnScrollMeasure() * 2) / 2) : this.currentPage;
 
       this.scrollList();
     },
+
+    // default method that measures width of one column appropriately
     columnScrollMeasure() {
       return this.getProductsList.children[0].getBoundingClientRect().width +
           this.getProductsList.children[2].getBoundingClientRect().left -
           this.getProductsList.children[0].getBoundingClientRect().right
     }
   },
+
+  // Options API that brings needed functions from Composition API hooks
   setup() {
     const {makeEaseOut, curve, animate, animating} = useAnimation();
+    const productsStore = useProductsStore();
+
     return {
-      makeEaseOut, curve, animate, animating
+      makeEaseOut, curve, animate, animating,
+      productsStore
     };
   },
   created() {
@@ -183,6 +212,7 @@ export default {
   border-radius: 100%;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.21);
 
+  /* special symbol that tells webpack to look path before packing */
   background: url("~@/assets/icons/down_arrow.png") var(--background-color) center/100%;
 }
 
